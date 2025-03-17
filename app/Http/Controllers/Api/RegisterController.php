@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Mail\SendEmail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Mail;
 
 class RegisterController extends Controller
 {
@@ -25,16 +27,24 @@ class RegisterController extends Controller
         ]);
 
         //if validation fails
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json($validator->errors(), 422);
+        // }
+
+        $otp = rand(1000, 9999);
 
         //create user
         $user = User::create([
             'name'      => $request->name,
             'email'     => $request->email,
-            'password'  => bcrypt($request->password)
+            'password'  => bcrypt($request->password),
+            'otp' => $otp,
+            'otp_expires' => now()->addMinutes(5),
         ]);
+
+        // Cache::put('otp_' . $email, $otp, now()->addMinutes(5));
+
+        Mail::to($request->email)->send(new SendEmail($otp));
 
         //return response JSON user is created
         if($user) {
@@ -53,3 +63,31 @@ class RegisterController extends Controller
     //     return view('app');
     // }
 }
+
+
+
+
+// public function sendOtp(Request $request)
+//     {
+//         // Validate the email input from the request
+//         // $request->validate([
+//         //     'email' => 'required|email',
+//         // ]);
+
+//         // Generate a random OTP
+//         $otp = rand(1000, 9999);
+
+//         // Cache::put('otp_' . $email, $otp, now()->addMinutes(5));
+
+//         // Prepare the data for the email
+//         $data = [
+//             'otp' => $otp
+//         ];
+
+//         // Send the OTP email to the provided email address
+//         Mail::to($request->email)->send(new SendEmail($data));
+//         // Mail::to($request->input('email'))->send(new SendEmail($data));
+
+//         // Return a success response
+//         return response()->json(['message' => 'OTP sent successfully']);
+//     }

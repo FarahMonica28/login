@@ -5,6 +5,7 @@ import Register from "./pages/register.vue";
 import Home from "./pages/home.vue";
 import Otp from "./pages/otp.vue";
 import Otpregis from "./pages/otpregis.vue";
+import Otplogin from "./pages/otplogin.vue";
 
 const routes = [
     {
@@ -31,6 +32,11 @@ const routes = [
         path : "/otpregis",
         name : "otpregis",
         component : Otpregis 
+    },
+    {
+        path : "/otplogin",
+        name : "otplogin",
+        component : Otplogin 
     }
 ];
 

@@ -16,26 +16,33 @@ const errorMessage = ref(""); // Untuk menampilkan pesan error jika registrasi g
 
 const submitRegister = async () => {
     try {
-        const response = await axiosClient.post("http://127.0.0.1:8000/api/register", {
-            name: data.value.name,
-            email: data.value.email,
-            password: data.value.password
-        });
+        let response = await axiosClient.post("/register",
+            data.value
+        );
+        console.log('anda berhasil regis');
 
         // Simpan token dari respons jika tersedia (untuk sesi login otomatis)
-        if (response.data.token) {
-            localStorage.setItem("token", response.data.token);
-            axiosClient.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
-        }
+        // if (response.data.token) {
+        //     localStorage.setItem("token", response.data.token);
+        //     axiosClient.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+        // }
         Swal.fire({
-            icon: 'success',
-            title: 'Registasi Berhasil!'
-            // timer: 2000, // Auto-close dalam 2 detik
-            // showConfirmButton: false
+            icon: "info",
+            title: "OTP Terkirim!",
+            text: "Silakan cek email Anda dan masukkan kode OTP.",
+            confirmButtonText: "OK"
         });
 
+        // Swal.fire({
+        //     icon: 'success',
+        //     title: 'Registasi Berhasil!'
+        //     // timer: 2000, // Auto-close dalam 2 detik
+        //     // showConfirmButton: false
+        // });
+
         // Redirect ke dashboard atau halaman utama setelah registrasi sukses
-        router.push("/");
+        localStorage.setItem('email', data.value.email);
+        router.push("/otpregis");
     } catch (error) {
         if (error.response) {
             errorMessage.value = error.response.data.message || "Registrasi gagal. Coba lagi!";

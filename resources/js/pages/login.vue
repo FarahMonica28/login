@@ -89,15 +89,15 @@ const submitLogin = async () => {
         <div class="mt-3 w-99.5 h-80 ml-113 rounded-md" id="data">
             <form @submit.prevent="submitLogin" class="space-y-6 ml-4 mt-4">
                 <div>
-                    <div class="flex items-center justify-between" >
+                    <div class="flex items-center justify-between">
                         <label for="email" class="block text-sm/ font-medium text-gray-900 mt-4">Email :</label>
                         <input type="email" name="email" id="email" autocomplete="email" required=""
-                            class="mt-3 mr-5 block w-60 rounded-md bg-white px-3 py-1.5 focus:outline-black" v-model="data.email">
+                            class="mt-3 mr-5 block w-60 rounded-md bg-white px-3 py-1.5 focus:outline-black"
+                            v-model="data.email">
                     </div>
                     <!-- <div class="mt-0.5">
                     </div> -->
                 </div>
-
                 <div>
                     <div class="flex items-center justify-between">
                         <label for="password" class="block text-sm/ font-medium text-gray-900 mt-3">Password :</label>
@@ -106,14 +106,20 @@ const submitLogin = async () => {
                                 password?</a>
                             </div> -->
                         <input type="password" name="password" id="password" autocomplete="current-password" required=""
-                            class="mt-2 mr-5 block w-60 rounded-md bg-white px-3 py-1.5 text-base focus:outline-black sm:text-sm/6" v-model="data.password"/>
+                            class="mt-2 mr-5 block w-60 rounded-md bg-white px-3 py-1.5 text-base focus:outline-black sm:text-sm/6"
+                            v-model="data.password" />
                     </div>
-                    <!-- <div class="mt-0.5">
-                    </div> -->
                 </div>
+                <!-- <p>Atau</p> -->
+                <p class="font-semibold  text-center text-sm/6 text-black mr-4" id="otp">
+                    Login Menggunakan kode OTP?
+                    <!-- {{ " " }} -->
+                    <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> -->
+                    <router-Link to="/otplogin" class="font-semibold" id="buat">Masuk</router-Link>
+                </p>
 
                 <button type="submit"
-                    class="mt-5 ml-5 flex w-65 justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white btn-hover-black">
+                    class="mt-1 ml-5 flex w-65 justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white btn-hover-black">
                     Masuk
                 </button>
             </form>
@@ -133,8 +139,13 @@ const submitLogin = async () => {
     /* background-color: rgb(245, 187, 245); */
     background: linear-gradient(to right, #fd9ffd, #d027d6);
 }
-span{
+
+span {
     color: red;
+}
+
+p {
+    text-align: center;
 }
 
 button {

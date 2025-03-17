@@ -43,27 +43,37 @@ const verifyOtp = async () => {
 
 <!-- // Vue Frontend (components/OtpVerification.vue) -->
 <template>
-    <div class="w-99.5 h-40 rounded-md" id="box">
-        <form @submit.prevent="verifyOtp">
-            <!-- <div>
-            <label for="email" class="mt-3 block text-sm/ font-medium text-gray-900 ">Email :</label>
-            <input v-model="email" class=" block w-60 rounded-md bg-white px-3 py-1.5 "
-                placeholder="Email" />
-            <button @click="sendOtp" class="mt-2 flex w-60 justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white ">Send OTP</button>
-        </div> -->
-            <div>
-                <label for="otp" class="mt-4 block text-sm/ font-medium text-gray-900 ">Verify-otp</label>
-                <input v-model="otp" class=" block w-60 rounded-md bg-white px-3 py-1.5" placeholder="OTP" />
-                <button type="submit"
-                    class="mt-2 flex w-60 justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white btn-hover-black">Daftar</button>
-            </div>
-        </form>
-        <!-- 
+    <GuestLayout>
+        <h2 class="text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+            Masukan Akun <span>Anda</span>
+        </h2>
+
+        <div class="mt-3 w-99.5 h-80 rounded-md" id="box">
+            <form @submit.prevent="masukOtp">
+                <div>
+                    <label class="mt-3 block text-sm/ font-medium text-gray-900">Email :</label>
+                    <input v-model="email" class=" block w-60 rounded-md bg-white px-3 py-1.5" placeholder="Email" />
+                    <button @click="sendOtp"
+                        class="mt-2 flex w-60 justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white ">
+                        Kirim OTP
+                    </button>
+                </div>
+                <div>
+                    <label for="otp" class="mt-4 block text-sm/ font-medium text-gray-900 ">Kode OTP : </label>
+                    <input v-model="otp" class=" block w-60 rounded-md bg-white px-3 py-1.5" placeholder="OTP" />
+                    <button type="submit"
+                        class="mt-2 flex w-60 justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white btn-hover-black">
+                        Masuk
+                    </button>
+                </div>
+            </form>
+            <!-- 
         <input v-model="otp" placeholder="Enter OTP" />
         <button @click="verifyOtp">Verify OTP</button> -->
-        <!-- 
+            <!-- 
         <p>{{ message }}</p> -->
-    </div>
+        </div>
+    </GuestLayout>
 </template>
 <style>
 /* body {
@@ -76,7 +86,7 @@ const verifyOtp = async () => {
 #box {
     margin-left: 35%;
     margin-top: 5%;
-    background: linear-gradient(rgb(84, 84, 224), rgb(230, 128, 230));
+    background: linear-gradient(to right, #fd9ffd, #d027d6);
     justify-items: center;
 }
 

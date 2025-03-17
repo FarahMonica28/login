@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\OtpController;
+use App\Mail\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +33,25 @@ Route::post('/logout', App\Http\Controllers\Api\LogoutController::class)->name('
 
 // Route::get("/test-me", function () {
 //     return 'Hello from Laravel!';
+// });
+// Route::get('/send-email',function(){
+//     $data = [
+//         'name' => 'Farah',
+//         'body' => 'haloo'
+//     ];
+   
+//     Mail::to('idontnow251@gmail.com')->send(new SendEmail($data));
+   
+//     dd("Email Berhasil dikirim.");
+// });
+
+// Route::post('/send-otp', [OtpController::class, 'sendOtp']);
+Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
+
+
+// Route::post('/verifyOtp', function (Request $request) {
+//     if ($request->otp == Session::get('otp')) {
+//         return response()->json(['message' => 'OTP Verified Successfully!']);
+//     }
+//     return response()->json(['message' => 'Invalid OTP'], 400);
 // });
