@@ -29,6 +29,11 @@ const verifyOtp = async () => {
         message.value = response.data.message;
     } catch (error) {
         message.value = error.response.data.message || "Error verifying OTP!";
+        Swal.fire({
+            icon: "error",
+            title: "Verifikasi Gagal",
+            text: error.response?.data?.message || "Kode OTP salah!",
+        });  
     }
 };
 

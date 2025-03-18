@@ -6,14 +6,15 @@
     <title>Sending OTP in Email Using Laravel 10 - Techsolutionstuff</title>
 </head>
 <body>
-    <p>Dear User,</p>
+    {{-- <p>Dear {{ name }}</p> --}}
     
-    <p>Your One-Time Password (OTP) is: <strong>{{ $otp }}</strong></p>
+    <p>Kode OTP kamu adalah: <strong>{{ $otp }}</strong></p>
 
     {{-- <p>Please use this OTP to complete your authentication process.</p> --}}
     <p>This code will expire in 5 minutes.</p>
+    {{-- <p>{{ $otp['expired'] }}</p> --}}
 
-    <p>Thank you,</p>
+    <p>Terimakasih,</p>
     <p>Your Application Team</p>
 </body>
 </html>

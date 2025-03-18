@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+// use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
@@ -37,6 +39,9 @@ class LoginController extends Controller
                 'message' => 'Email atau Password Anda salah'
             ], 401);
         }
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['message' => 'Email atau password salah.'], 401);
+        }
 
         //if auth success
         return response()->json([
@@ -45,4 +50,5 @@ class LoginController extends Controller
             'token'   => $token   
         ], 200);
     }
+
 }

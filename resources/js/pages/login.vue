@@ -37,6 +37,8 @@ import Swal from "sweetalert2"; // Import SweetAlert2
 import axiosClient from "../axios";
 import router from "../router";
 
+// localStorage.setItem("name", response.data.user.name);
+
 const data = ref({
     email: "",
     password: "",
@@ -52,6 +54,7 @@ const submitLogin = async () => {
         if (response.status === 200) {
             const token = response.data.token;
             localStorage.setItem('authToken', token);
+            localStorage.setItem("name", response.data.user.name);
 
             // **SweetAlert2 Notifikasi Berhasil**
             Swal.fire({
@@ -77,6 +80,7 @@ const submitLogin = async () => {
         console.error('Login error:', error);
     }
 };
+
 </script>
 
 
@@ -114,7 +118,7 @@ const submitLogin = async () => {
                 <p class="font-semibold  text-center text-sm/6 text-black mr-4" id="otp">
                     Login Menggunakan Kode 
                     <!-- {{ " " }} -->
-                    <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> -->
+                     <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> -->
                     <router-Link to="/otplogin" class="font-semibold" id="buat">OTP?</router-Link>
                 </p>
 
@@ -156,7 +160,7 @@ button {
 }
 
 button:hover {
-    background-color: rgb(122, 104, 104);
+    background-color: rgb(161, 143, 143);
     color: rgb(20, 19, 20);
     border: none;
 }

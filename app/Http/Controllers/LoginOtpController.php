@@ -100,6 +100,7 @@ class LoginOtpController extends Controller
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
+        $request->user()->otp()->delete();
 
         return response()->json(['message' => 'Logout berhasil!']);
     }

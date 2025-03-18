@@ -63,7 +63,7 @@ class OtpController extends Controller {
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'otp' => 'required|numeric:4',
+            'otp' => 'required|numeric:6',
         ]);
 
         if ($validator->fails()) {
@@ -77,6 +77,9 @@ class OtpController extends Controller {
             return response()->json(['message' => 'Invalid or expired OTP!'], 400);
         }
 
+        // $user->otp = null;
+        // $user->otp_expires = null;
+        // $user->save;
         // $otp->delete(); // Hapus OTP setelah berhasil diverifikasi
 
         return response()->json(['message' => 'OTP Verified!'], 200);

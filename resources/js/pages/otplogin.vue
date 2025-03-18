@@ -56,7 +56,8 @@ const sendOtp = async () => {
     console.log('email ditekan')
     try {
         await axiosClient.post("/send-otp", { email: email.value });
-        console.log('mengirim')
+        console.log('mengirim'),
+
         Swal.fire({
             icon: "success",
             title: "OTP berhasil dikirim!",
@@ -64,7 +65,7 @@ const sendOtp = async () => {
     } catch (error) {
         Swal.fire({
             icon: "error",
-            title: "Gagal mengirim OTP",
+            title: "Email Tidak Ditemukan",
             // text: error.response?.data?.message || "Terjadi kesalahan!",
         });
     }
@@ -76,16 +77,21 @@ const verifyOtp = async () => {
             email: email.value,
             otp: otp.value,
         });
+        if (response.status === 200) {
+            const token = response.data.token;
+            localStorage.setItem('authToken', token);
+            localStorage.setItem("name", response.data.user.name);
         Swal.fire({
             icon: "success",
-            title: "Registrasi Berhasil!",
+            title: "Login Berhasil!",
         });
         router.push("/home");
+    }
         message.value = response.data.message;
     } catch (error) {
         Swal.fire({
             icon: "error",
-            title: "Verifikasi Gagal",
+            title: "Login Gagal",
             text: error.response?.data?.message || "Kode OTP salah!",
         });  
     }
@@ -103,14 +109,20 @@ const verifyOtp = async () => {
             <div>
                 <label class="mt-3 block text-sm/ font-medium text-gray-900">Email :</label>
                 <input v-model="email" class=" block w-60 rounded-md bg-white px-3 py-1.5" placeholder="Email" />
-                <button @click="sendOtp"
+                <button v-if="!otpSent" @click="sendOtp" id="op"
                     class="mt-2 flex w-60 justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white ">
                     Kirim OTP
                 </button>
             </div>
+            <!-- <p class="font-semibold  text-center text-sm/6 text-black mr-2 mt-3" id="otp">
+                Login Menggunakan 
+                <!-- {{ " " }} -->
+                <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> 
+                <router-Link to="/" class="font-semibold" id="buat">Password?</router-Link>
+            </p> -->
             <form @submit.prevent="verifyOtp">
                 <div>
-                    <label for="otp" class="mt-4 block text-sm/ font-medium text-gray-900 ">Kode OTP : </label>
+                    <label for="otp" class="mt-3 block text-sm/ font-medium text-gray-900 ">Kode OTP : </label>
                     <input v-model="otp" class=" block w-60 rounded-md bg-white px-3 py-1.5" placeholder="OTP" />
                     <button type="submit"
                         class="mt-2 flex w-60 justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white btn-hover-black">
@@ -159,6 +171,12 @@ const verifyOtp = async () => {
 
 input {
     border: 1px solid;
+}
+#op{
+    background: rgb(230, 128, 230);
+}
+#op:hover{
+    background: rgb(161, 143, 143);
 }
 </style>
 

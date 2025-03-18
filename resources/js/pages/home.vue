@@ -1,34 +1,23 @@
-<!-- <script setup>
-import { ref } from "vue";
-import GuestLayout from "../components/GuestLayout.vue";
-import axiosClient from "../axios";
-import router from "../router";
-// import { useRouter } from "vue-router";
-// const router = useRouter(); // Menggunakan Vue Router untuk navigasi
-
-const logout = () => {
-    // Hapus token dari localStorage
-    localStorage.removeItem("authToken");
-
-    // Redirect ke halaman login
-    router.push("/");
-};
-</script> -->
-
 <script setup>
+import { ref, onMounted } from "vue";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
-// import router from "../router";
 
-//menambahkan nama
-// import {ref, onMounted} from "vue";
-// const name = ref("");
-// onMounted(() => {
-//     name.value = localStorage.getItem("name") || "User";
-//     console.log(name.value);
-// });
+const router = useRouter(); 
+const name = ref("");
 
-const router = useRouter(); // Menggunakan Vue Router untuk navigasi
+// Ambil nama dari localStorage saat halaman dimuat
+onMounted(() => {
+    const storedName = localStorage.getItem("name");
+    const authToken = localStorage.getItem("authToken");
+
+    if (!authToken) {
+        // Jika tidak ada token, redirect ke halaman login
+        router.push("/");
+    } else {
+        name.value = storedName || "User"; // Default ke "User" jika nama tidak ada
+    }
+});
 
 const logout = () => {
     Swal.fire({
@@ -41,14 +30,14 @@ const logout = () => {
         cancelButtonText: "Batal"
     }).then((result) => {
         if (result.isConfirmed) {
-            // Hapus token dari localStorage
+            // Hapus data dari localStorage
             localStorage.removeItem("authToken");
+            localStorage.removeItem("name");
 
             // Menampilkan notifikasi sukses
             Swal.fire({
                 icon: "success",
                 title: "Berhasil Keluar!",
-                // text: "Anda akan diarahkan ke halaman login.",
                 confirmButtonText: "OK"
             }).then(() => {
                 // Redirect ke halaman login
@@ -61,52 +50,17 @@ const logout = () => {
 
 <template>
     <div>
-        <!-- Hero Section -->
         <section class="hero-section">
             <div class="container">
-                <!-- <h1>SELAMAT DATANG {{ name }} DI HALAM HOME</h1> -->
-                <h1>SELAMAT DATANG DI HALAM HOME</h1>
-                <!-- <p>Discover our amazing features and learn more about us.</p>
-          <button class="btn btn-light btn-lg mt-4">Learn More</button> -->
+                <h1>SELAMAT DATANG <b>{{ name }}</b> DI HALAMAN HOME</h1>
             </div>
         </section>
         <button @click="logout"
-            class="mt-5 flex justify-center items-center w-40 rounded-md-10 px-3 py-1.5 text-sm/6 font-semibold text-white">
+            class="mt-5 flex justify-center items-center w-40 rounded-md px-3 py-1.5 text-sm font-semibold text-white bg-red-500">
             Keluar
         </button>
-        <!-- Features Section -->
-        <!-- <section class="features-section">
-            <div class="container">
-                <div class="row text-center">
-                    <div class="col-md-4">
-                        <div class="feature-card">
-                            <h4>Feature One</h4>
-                            <p>Explore our first feature that makes your experience better.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="feature-card">
-                            <h4>Feature Two</h4>
-                            <p>Learn how our second feature can help you achieve more.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="feature-card">
-                            <h4>Feature Three</h4>
-                            <p>Discover the benefits of our third unique feature.</p>
-                        </div>
-                    </div>
-                    <button @click="logout"
-                        class="mt-5 flex justify-center items-center w-55 rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white">
-                        Keluar
-                    </button>
-
-                </div>
-            </div>
-        </section> -->
     </div>
 </template>
-
 
 <style scoped>
 .hero-section {
@@ -117,36 +71,8 @@ const logout = () => {
     text-align: center;
 }
 
-/* button{
-    border-bottom: 5%;
-} */
-.features-section {
-    padding: 50px 0;
-}
-
-.feature-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    margin-top: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.feature-card h4 {
-    font-size: 1.5rem;
-}
-
-.feature-card p {
-    color: #555;
-}
-
 .container {
     max-width: 1140px;
     margin: auto;
-}
-
-.btn {
-    align-self: center;
 }
 </style>
