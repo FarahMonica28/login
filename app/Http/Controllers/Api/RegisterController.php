@@ -31,7 +31,7 @@ class RegisterController extends Controller
         //     return response()->json($validator->errors(), 422);
         // }
 
-        $otp = rand(1000, 9999);
+        $otp = rand(100000, 999999);
 
         //create user
         $user = User::create([

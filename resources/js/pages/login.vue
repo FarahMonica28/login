@@ -112,10 +112,10 @@ const submitLogin = async () => {
                 </div>
                 <!-- <p>Atau</p> -->
                 <p class="font-semibold  text-center text-sm/6 text-black mr-4" id="otp">
-                    Login Menggunakan kode OTP?
+                    Login Menggunakan Kode 
                     <!-- {{ " " }} -->
                     <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> -->
-                    <router-Link to="/otplogin" class="font-semibold" id="buat">Masuk</router-Link>
+                    <router-Link to="/otplogin" class="font-semibold" id="buat">OTP?</router-Link>
                 </p>
 
                 <button type="submit"

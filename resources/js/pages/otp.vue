@@ -1,57 +1,121 @@
-<template>
-    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div class="bg-white p-6 rounded-lg shadow-md w-80">
-        <h2 class="text-xl font-semibold text-center">Masukkan OTP</h2>
-        <p class="text-gray-500 text-center">Kode OTP telah dikirim ke nomor Anda.</p>
-        
-        <div class="flex justify-center gap-2 mt-4">
-          <input v-for="(digit, index) in otp" :key="index" v-model="otp[index]" 
-            class="w-12 h-12 text-center text-xl border rounded focus:ring-2 focus:ring-blue-500" 
-            maxlength="1" @input="moveFocus(index, $event)" />
-        </div>
-        
-        <button @click="verifyOTP" class="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-          Verifikasi
-        </button>
-        
-        <p v-if="timer > 0" class="text-center text-gray-500 mt-2">Kirim ulang dalam {{ timer }} detik</p>
-        <button v-else @click="resendOTP" class="w-full mt-2 text-blue-500">Kirim Ulang OTP</button>
-      </div>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref, onMounted } from 'vue';
-  
-  const otp = ref(["", "", "", ""]);
-  const timer = ref(30);
-  
-  const moveFocus = (index, event) => {
-    if (event.target.value && index < otp.value.length - 1) {
-      event.target.nextElementSibling?.focus();
+<script setup>
+import { ref } from "vue";
+import GuestLayout from "../components/GuestLayout.vue";
+import Swal from "sweetalert2"; // Import SweetAlert2
+import axiosClient from "../axios";
+import router from "../router";
+
+const data = ref({
+  email: "",
+  password: "",
+  otp: "", // State baru untuk OTP
+});
+const isOtpSent = ref(false); // State untuk memeriksa apakah OTP telah dikirim
+
+const submitLogin = async () => {
+  try {
+    const response = await axiosClient.post('http://127.0.0.1:8000/api/login', {
+      email: data.value.email,
+      password: data.value.password
+    });
+
+    if (response.status === 200) {
+      // OTP berhasil dikirim
+      isOtpSent.value = true;
+      Swal.fire({
+        icon: 'success',
+        title: 'OTP telah dikirim!',
+        text: 'Silakan periksa email Anda untuk mendapatkan OTP.',
+      });
     }
-  };
-  
-  const verifyOTP = () => {
-    alert("OTP yang dimasukkan: " + otp.value.join(""));
-  };
-  
-  const resendOTP = () => {
-    timer.value = 30;
-    const countdown = setInterval(() => {
-      timer.value--;
-      if (timer.value === 0) clearInterval(countdown);
-    }, 1000);
-  };
-  
-  onMounted(() => resendOTP());
-  </script>
-  
-  <style scoped>
-  input::-webkit-inner-spin-button, 
-  input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Login Gagal!',
+      text: error.response?.data?.message || 'Email atau password salah.',
+    });
+    console.error('Kesalahan login:', error);
   }
-  </style>
-  
+};
+
+const verifyOtp = async () => {
+  try {
+    const response = await axiosClient.post('http://127.0.0.1:8000/api/verify-otp', {
+      email: data.value.email,
+      otp: data.value.otp
+    });
+
+    if (response.status === 200) {
+      const token = response.data.token;
+      localStorage.setItem('authToken', token);
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Berhasil!',
+      });
+      router.push('/home');
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Verifikasi Gagal!',
+      text: error.response?.data?.message || 'OTP tidak valid.',
+    });
+    console.error('Kesalahan verifikasi OTP:', error);
+  }
+};
+</script>
+
+<template>
+  <GuestLayout>
+    <h2 class="text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+      Masukan Akun <span>Anda</span>
+    </h2>
+
+    <div class="mt-3 w-99.5 h-80 ml-113 rounded-md" id="data">
+      <form @submit.prevent="isOtpSent ? verifyOtp() : submitLogin()" class="space-y-6 ml-4 mt-4">
+        <div>
+          <div class="flex items-center justify-between">
+            <label for="email" class="block text-sm/ font-medium text-gray-900 mt-4">Email :</label>
+            <input type="email" name="email" id="email" autocomplete="email" required=""
+              class="mt-3 mr-5 block w-60 rounded-md bg-white px-3 py-1.5 focus:outline-black" v-model="data.email">
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between">
+            <label for="password" class="block text-sm/ font-medium text-gray-900 mt-3">Password :</label>
+            <input type="password" name="password" id="password" autocomplete="current-password" required=""
+              class="mt-2 mr-5 block w-60 rounded-md bg-white px-3 py-1.5 text-base focus:outline-black sm:text-sm/6"
+              v-model="data.password" />
+          </div>
+        </div>
+
+        <div v-if="isOtpSent">
+          <div class="flex items-center justify-between">
+            <label for="otp" class="block text-sm/ font-medium text-gray-900 mt-3">OTP :</label>
+            <input type="text" name="otp" id="otp" required=""
+              class="mt-2 mr-5 block w-60 rounded-md bg-white px-3 py-1.5 text-base focus:outline-black sm:text-sm/6"
+              v-model="data.otp" />
+          </div>
+        </div>
+
+        <button type="submit"
+          class="mt-5 ml-5 flex w-65 justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white btn-hover-black">
+          {{ isOtpSent ? 'Verifikasi OTP' : 'Masuk' }}
+        </button>
+      </form>
+
+      <p class="font-semibold text-center text-sm/6 text-black" id="tes">
+        Tidak Memiliki Akun?
+        <router-Link to="/register" class="font-semibold" id="buat">Buat Akun</router-Link>
+      </p>
+    </div>
+  </GuestLayout>
+</template>
+
+<style>
+/* button {
+    background: red;
+} */
+/* Gaya yang sudah ada */
+</style>

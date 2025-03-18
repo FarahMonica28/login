@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginOtpController;
 use App\Http\Controllers\OtpController;
 use App\Mail\SendEmail;
 use Illuminate\Http\Request;
@@ -47,6 +48,8 @@ Route::post('/logout', App\Http\Controllers\Api\LogoutController::class)->name('
 
 // Route::post('/send-otp', [OtpController::class, 'sendOtp']);
 Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
+Route::post('/send-otp', [LoginOtpController::class, 'login']);
+Route::post('/verify', [LoginOtpController::class, 'verify']);
 
 
 // Route::post('/verifyOtp', function (Request $request) {
