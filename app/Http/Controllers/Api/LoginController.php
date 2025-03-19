@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-// use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -18,37 +18,40 @@ class LoginController extends Controller
      */
     public function __invoke(Request $request)
     {
-        //set validation
+        // Validasi input
         $validator = Validator::make($request->all(), [
-            'email'     => 'required',
+            'email'     => 'required|email',
             'password'  => 'required'
         ]);
 
-        //if validation fails
+        // Jika validasi gagal
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        //get credentials from request
-        $credentials = $request->only('email', 'password');
-
-        //if auth failed
-        if(!$token = auth()->guard('api')->attempt($credentials)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Email atau Password Anda salah'
-            ], 401);
-        }
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Email atau password salah.'], 401);
+                'errors'  => $validator->errors()
+            ], 422);
         }
 
-        //if auth success
+        // Cek apakah email ada di database
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return response()->json(['message' => 'Email tidak terdaftar!'], 404);
+        }
+
+        // Coba login dengan kredensial yang diberikan
+        $credentials = $request->only('email', 'password');
+        if (!$token = auth()->guard('api')->attempt($credentials)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email atau password salah.'
+            ], 401);
+        }
+
+        // Jika login berhasil, kembalikan token dan informasi pengguna
         return response()->json([
             'success' => true,
             'user'    => auth()->guard('api')->user(),    
             'token'   => $token   
         ], 200);
     }
-
 }

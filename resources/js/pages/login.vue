@@ -70,16 +70,44 @@ const submitLogin = async () => {
             // }, 2000);
         }
     } catch (error) {
-        // **SweetAlert2 Notifikasi Gagal**
-        Swal.fire({
-            icon: 'error',
-            title: 'Login Gagal!',
-            text: error.response?.data?.message || 'Email atau password salah.',
-        });
-
         console.error('Login error:', error);
-    }
-};
+
+        if (error.response) {
+            if (error.response.status === 404) {
+                // **Alert jika email tidak ditemukan**
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Email Belum Terdaftar!',
+                    text: 'Silakan buat akun terlebih dahulu.',
+                });
+            } else if (error.response.status === 401) {
+                // **Alert jika password salah**
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Gagal!',
+                    text: error.response.data.message || 'Email atau password salah.',
+                });
+            } else {
+                // **Alert jika terjadi kesalahan lainnya**
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan!',
+                    text: 'Silakan coba lagi nanti.',
+                });
+            }
+        }
+    
+    // catch (error) {
+    //     // **SweetAlert2 Notifikasi Gagal**
+    //     if(error = 401)
+    //     Swal.fire({
+    //         icon: 'error',
+    //         title: 'Login Gagal!',
+    //         text: error.response?.data?.message || 'Email atau password salah.',
+    //     });
+    //     console.error('Login error:', error);
+    // }
+}};
 
 </script>
 

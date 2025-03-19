@@ -53,7 +53,7 @@ const message = ref("");
 const email = ref("");
 
 const sendOtp = async () => {
-    console.log('email ditekan')
+    console.log('kirim OTP')
     try {
         await axiosClient.post("/send-otp", { email: email.value });
         console.log('mengirim'),

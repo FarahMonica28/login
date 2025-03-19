@@ -51,6 +51,7 @@ Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
 Route::post('/send-otp', [LoginOtpController::class, 'login']);
 Route::post('/verify', [LoginOtpController::class, 'verify']);
 
+// Route::post('/resend-otp', [ResendOtpController::class, 'resendOtp']);
 
 // Route::post('/verifyOtp', function (Request $request) {
 //     if ($request->otp == Session::get('otp')) {
