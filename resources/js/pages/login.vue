@@ -38,23 +38,52 @@ import axiosClient from "../axios";
 import router from "../router";
 
 // localStorage.setItem("name", response.data.user.name);
-
 const data = ref({
     email: "",
     password: "",
 });
 
+const loading = ref(false);
+const errors = ref({});
+
 const submitLogin = async () => {
     try {
-        const response = await axiosClient.post('http://127.0.0.1:8000/api/login', {
+        const response = await axiosClient.post('/login', {
             email: data.value.email,
             password: data.value.password
         });
+        const user = response.data.user; // Ambil user dari response
+
+        // **Cek apakah email sudah diverifikasi**
+        // if (!user.email_verified_at) {
+        //     const { isConfirmed } = await Swal.fire({
+        //         icon: 'warning',
+        //         title: 'Akun Belum Diverifikasi',
+        //         text: 'Anda belum memverifikasi akun Anda. Apakah Anda ingin mengirim ulang email verifikasi?',
+        //         showCancelButton: true,
+        //         confirmButtonText: 'Ya, Kirim Ulang',
+        //         cancelButtonText: 'Tidak'
+        //     });
+        //     if (isConfirmed) {
+        //         await axiosClient.post('/resend-otp', {
+        //             email: data.value.email
+        //         });
+        //         Swal.fire({
+        //             icon: 'success',
+        //             title: 'Email Verifikasi Dikirim!',
+        //             text: 'Silakan periksa email Anda.',
+        //         });
+        //         router.push('/otpregis')
+        //     }
+        //     return;
+        // }
 
         if (response.status === 200) {
             const token = response.data.token;
             localStorage.setItem('authToken', token);
             localStorage.setItem("name", response.data.user.name);
+            localStorage.getItem("email", response.data.email);
+
 
             // **SweetAlert2 Notifikasi Berhasil**
             Swal.fire({
@@ -70,45 +99,50 @@ const submitLogin = async () => {
             // }, 2000);
         }
     } catch (error) {
-        console.error('Login error:', error);
-
         if (error.response) {
-            if (error.response.status === 404) {
-                // **Alert jika email tidak ditemukan**
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Email Belum Terdaftar!',
-                    text: 'Silakan buat akun terlebih dahulu.',
-                });
-            } else if (error.response.status === 401) {
-                // **Alert jika password salah**
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Login Gagal!',
-                    text: error.response.data.message || 'Email atau password salah.',
-                });
-            } else {
-                // **Alert jika terjadi kesalahan lainnya**
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Terjadi Kesalahan!',
-                    text: 'Silakan coba lagi nanti.',
-                });
-            }
-        }
-    
-    // catch (error) {
-    //     // **SweetAlert2 Notifikasi Gagal**
-    //     if(error = 401)
-    //     Swal.fire({
-    //         icon: 'error',
-    //         title: 'Login Gagal!',
-    //         text: error.response?.data?.message || 'Email atau password salah.',
-    //     });
-    //     console.error('Login error:', error);
-    // }
-}};
+            if (error.response.status === 401) {
+                errors.value.general = "Email atau password salah";
+                alert(errors.value.general);
+            } else if (error.response.status === 403) {
+                errors.value = "Email belum terverifikasi";
 
+                // Tampilkan konfirmasi
+                if (
+                    confirm(
+                        "Email belum terverifikasi. Kirim ulang OTP sekarang?"
+                    )
+                ) {
+                    console.log('kode OTP dikirim')
+                    // Kirim ulang OTP
+                    axiosClient
+                        .post("/resend-otp", { email: data.value.email })
+                        .then(() => {
+                            // Redirect ke halaman OTP setelah sukses kirim ulang
+                            window.location.href = "/otpregis";
+                        })
+                        .catch((otpError) => {
+                            alert("Gagal mengirim OTP. Silakan coba lagi.");
+                        });
+                }
+            } else {
+                // errors.value.general = "Email Tidak Ditemukan";
+                // alert(errors.value.general);
+                Swal.fire({
+                icon: 'error',
+                title: 'Email Tidak Ditemukan!'
+                // timer: 2000, // Auto-close dalam 2 detik
+                // showConfirmButton: false
+            });
+
+            }
+        } else {
+            errors.value.general = "Tidak dapat menghubungi server.";
+            alert(errors.value.general);
+        }
+    } finally {
+        loading.value = false; // Matikan loading
+    }
+};
 </script>
 
 
@@ -144,9 +178,9 @@ const submitLogin = async () => {
                 </div>
                 <!-- <p>Atau</p> -->
                 <p class="font-semibold  text-center text-sm/6 text-black mr-4" id="otp">
-                    Login Menggunakan Kode 
+                    Login Menggunakan Kode
                     <!-- {{ " " }} -->
-                     <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> -->
+                    <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> -->
                     <router-Link to="/otplogin" class="font-semibold" id="buat">OTP?</router-Link>
                 </p>
 

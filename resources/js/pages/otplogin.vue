@@ -58,10 +58,10 @@ const sendOtp = async () => {
         await axiosClient.post("/send-otp", { email: email.value });
         console.log('mengirim'),
 
-        Swal.fire({
-            icon: "success",
-            title: "OTP berhasil dikirim!",
-        });
+            Swal.fire({
+                icon: "success",
+                title: "OTP berhasil dikirim!",
+            });
     } catch (error) {
         Swal.fire({
             icon: "error",
@@ -69,6 +69,9 @@ const sendOtp = async () => {
             // text: error.response?.data?.message || "Terjadi kesalahan!",
         });
     }
+    // if (!this.email){
+    //     this.otpSent = true;
+    // }
 };
 
 const verifyOtp = async () => {
@@ -81,19 +84,19 @@ const verifyOtp = async () => {
             const token = response.data.token;
             localStorage.setItem('authToken', token);
             localStorage.setItem("name", response.data.user.name);
-        Swal.fire({
-            icon: "success",
-            title: "Login Berhasil!",
-        });
-        router.push("/home");
-    }
+            Swal.fire({
+                icon: "success",
+                title: "Login Berhasil!",
+            });
+            router.push("/home");
+        }
         message.value = response.data.message;
     } catch (error) {
         Swal.fire({
             icon: "error",
             title: "Login Gagal",
             text: error.response?.data?.message || "Kode OTP salah!",
-        });  
+        });
     }
 };
 </script>
@@ -116,8 +119,8 @@ const verifyOtp = async () => {
             </div>
             <!-- <p class="font-semibold  text-center text-sm/6 text-black mr-2 mt-3" id="otp">
                 Login Menggunakan 
-                <!-- {{ " " }} -->
-                <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> 
+                <{{ " " }} -->
+            <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> 
                 <router-Link to="/" class="font-semibold" id="buat">Password?</router-Link>
             </p> -->
             <form @submit.prevent="verifyOtp">
@@ -131,7 +134,7 @@ const verifyOtp = async () => {
                 </div>
             </form>
             <p class="font-semibold  text-center text-sm/6 text-black mr-2 mt-3" id="otp">
-                Login Menggunakan 
+                Login Menggunakan
                 <!-- {{ " " }} -->
                 <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> -->
                 <router-Link to="/" class="font-semibold" id="buat">Password?</router-Link><br>
@@ -165,17 +168,19 @@ const verifyOtp = async () => {
 #box {
     margin-left: 35%;
     margin-top: 5%;
-    background: linear-gradient(rgb(230, 128, 230), rgb(84, 84, 224),);
+    background: linear-gradient(rgb(230, 128, 230), rgb(84, 84, 224), );
     justify-items: center;
 }
 
 input {
     border: 1px solid;
 }
-#op{
+
+#op {
     background: rgb(230, 128, 230);
 }
-#op:hover{
+
+#op:hover {
     background: rgb(161, 143, 143);
 }
 </style>

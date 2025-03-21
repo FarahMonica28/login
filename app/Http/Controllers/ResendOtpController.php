@@ -1,50 +1,40 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Mail\SendEmail;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 
 class ResendOtpController extends Controller
 {
-    /**
-     * Resend OTP to the user's email.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function resendOtp(Request $request)
+    public function resend(Request $request) // Perbaikan di parameter
     {
-        // Validasi input
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email'
-        ]);
+        // Validasi email
+        // $request->validate([
+        //     'email' => 'required|email',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json([ 'success' => false, 'message' => $validator->errors() ], 422);
-        }
-
-        // Cari user berdasarkan email
+        // Cari pengguna berdasarkan email
         $user = User::where('email', $request->email)->first();
 
-        // Cek apakah user sudah terverifikasi
-        if ($user->email_verified_at) {
-            return response()->json([ 'success' => false, 'message' => 'Akun sudah terverifikasi.' ], 400);
+        if (!$user) {
+            return response()->json(['message' => 'Email tidak ditemukan'], 404);
         }
 
-        // Generate OTP baru
-        $otp = rand(100000, 999999);
+        // Buat OTP baru (contoh: 6 digit angka acak)
+        $otp = rand(10000, 99999);
+
+        // Simpan OTP di database (sesuaikan dengan struktur tabel)
         $user->otp = $otp;
-        $user->otp_expires = now()->addMinutes(5);
+        $user->otp_expires = now()->addMinutes(10);
         $user->save();
 
-        // Kirim email dengan OTP baru
-        Mail::to($user->email)->send(new SendEmail($otp));
+        // Kirim email
+        Mail::to($request->email)->send(new SendEmail($otp));
 
-        return response()->json([ 'success' => true, 'message' => 'OTP telah dikirim ulang.' ]);
+        // Beri respon sukses
+        return response()->json(['message' => 'OTP berhasil dikirim'], 200);
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
+
 use App\Http\Controllers\LoginOtpController;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\ResendOtpController;
 use App\Mail\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -51,7 +53,7 @@ Route::post('/verify-otp', [OtpController::class, 'verifyOtp']);
 Route::post('/send-otp', [LoginOtpController::class, 'login']);
 Route::post('/verify', [LoginOtpController::class, 'verify']);
 
-// Route::post('/resend-otp', [ResendOtpController::class, 'resendOtp']);
+Route::post('/resend-otp', [ResendOtpController::class, 'resend']);
 
 // Route::post('/verifyOtp', function (Request $request) {
 //     if ($request->otp == Session::get('otp')) {

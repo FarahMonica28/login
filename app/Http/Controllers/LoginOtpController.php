@@ -85,7 +85,7 @@ class LoginOtpController extends Controller
         // $token = $user->createToken('auth_token')->plainTextToken;
         $user->otp = null;
         $user->otp_expires = null;
-        $user->save;
+        $user->save();
 
         return response()->json([
             'message' => 'Login berhasil!',

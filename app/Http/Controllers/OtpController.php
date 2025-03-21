@@ -66,21 +66,24 @@ class OtpController extends Controller {
             'otp' => 'required|numeric:6',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['message' => 'Invalid input!'], 400);
-        }
-
+     
         $user = user::where('email', $request->email)
                     ->first();
+
+
+        if ($user->otp !== $request->otp) {
+            return response()->json(['message' => 'Kode OTP salah!'], 400);
+        }
 
         if (!$user) {
             return response()->json(['message' => 'Invalid or expired OTP!'], 400);
         }
 
-        // $user->otp = null;
-        // $user->otp_expires = null;
-        // $user->save;
-        // $otp->delete(); // Hapus OTP setelah berhasil diverifikasi
+        $user->otp = null;
+        $user->otp_expires = null;
+        $user->email_verified_at = now();
+        $user->save();
+        // $user->ot  // Hapus OTP setelah berhasil diverifikasi
 
         return response()->json(['message' => 'OTP Verified!'], 200);
     }

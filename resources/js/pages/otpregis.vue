@@ -16,24 +16,40 @@ const verifyOtp = async () => {
             email: email,
             otp: otp.value
         });
-        Swal.fire({
-            icon: 'success',
-            title: 'Registasi Berhasil!'
-            // timer: 2000, // Auto-close dalam 2 detik
-            // showConfirmButton: false
-        });
 
-        // Redirect ke dashboard atau halaman utama setelah registrasi sukses
-        router.push("/");
+        // localStorage.removeItem('email');
+        if (response.status === 200) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Registasi Berhasil!'
+                // timer: 2000, // Auto-close dalam 2 detik
+                // showConfirmButton: false
+            });
 
+            // Redirect ke dashboard atau halaman utama setelah registrasi sukses
+            router.push("/");
+        }
         message.value = response.data.message;
-    } catch (error) {
-        message.value = error.response.data.message || "Error verifying OTP!";
+    }  catch (error) {
+        console.error("OTP Verification Error:", error); // Debugging error di console
+
+        let errorMessage = "Terjadi kesalahan saat verifikasi OTP.";
+
+        if (error.response) {
+            if (error.response.status === 400) {
+                errorMessage = error.response.data.message || "Kode OTP salah!";
+            } else if (error.response.status === 422) {
+                errorMessage = "Kode OTP telah kedaluwarsa. Silakan kirim ulang.";
+            } else if (error.response.status === 500) {
+                errorMessage = "Terjadi kesalahan server. Coba lagi nanti.";
+            }
+        }
+
         Swal.fire({
             icon: "error",
             title: "Verifikasi Gagal",
-            text: error.response?.data?.message || "Kode OTP salah!",
-        });  
+            text: errorMessage,
+        });
     }
 };
 

@@ -15,6 +15,7 @@ const data = ref({
 const errorMessage = ref(""); // Untuk menampilkan pesan error jika registrasi gagal
 
 const submitRegister = async () => {
+    console.log('kode otp dikirim')
     try {
         let response = await axiosClient.post("/register",
             data.value

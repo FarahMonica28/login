@@ -38,7 +38,7 @@ class RegisterController extends Controller
             'name'      => $request->name,
             'email'     => $request->email,
             'password'  => bcrypt($request->password),
-            'otp' => $otp,
+            'otp' => $otp, 
             'otp_expires' => now()->addMinutes(5),
         ]);
 
