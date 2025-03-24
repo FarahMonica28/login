@@ -78,7 +78,8 @@ class OtpController extends Controller {
         if (!$user) {
             return response()->json(['message' => 'Invalid or expired OTP!'], 400);
         }
-
+  
+        
         $user->otp = null;
         $user->otp_expires = null;
         $user->email_verified_at = now();
