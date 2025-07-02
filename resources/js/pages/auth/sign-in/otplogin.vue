@@ -43,9 +43,9 @@ const verifyOtp = async () => {
 
 <script setup>
 import { ref } from "vue";
-import GuestLayout from "../components/GuestLayout.vue";
-import axiosClient from "../axios";
-import router from "../router";
+import GuestLayout from "../../../components/GuestLayout.vue";
+import axiosClient from "../../../axios";
+import router from "../../../router";
 import Swal from "sweetalert2";
 
 const otp = ref("");
@@ -137,11 +137,11 @@ const verifyOtp = async () => {
                 Login Menggunakan
                 <!-- {{ " " }} -->
                 <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> -->
-                <router-Link to="/" class="font-semibold" id="buat">Password?</router-Link><br>
+                <router-Link to="/sign-in" class="font-semibold" id="buat">Password?</router-Link><br>
                 Tidak Memiliki Akun?
                 <!-- {{ " " }} -->
                 <!-- <a href="/register" class="font-semibold" id="buat">Buat Akun</a> -->
-                <router-Link to="/register" class="font-semibold" id="buat">Buat Akun</router-Link>
+                <router-Link to="/sign-up" class="font-semibold" id="buat">Buat Akun</router-Link>
             </p>
             <!-- <p class="font-semibold  text-center text-sm/6 text-black mr-2" id="otp">
                 Login Menggunakan Password?

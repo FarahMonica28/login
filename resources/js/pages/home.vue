@@ -41,7 +41,7 @@ const logout = () => {
                 confirmButtonText: "OK"
             }).then(() => {
                 // Redirect ke halaman login
-                router.push("/");
+                router.push("/sign-in");
             });
         }
     });
@@ -65,8 +65,8 @@ const logout = () => {
 <style scoped>
 .hero-section {
     font-family: 'Times New Roman', Times, serif;
-    background: linear-gradient(to right, #6a11cb, #da2ae0);
-    color: white;
+    /* background: linear-gradient(to right, #6a11cb, #da2ae0); */
+    /* color: white; */
     padding: 100px 0;
     text-align: center;
 }

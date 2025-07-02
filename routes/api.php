@@ -4,6 +4,8 @@
 use App\Http\Controllers\LoginOtpController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ResendOtpController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Mail\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +56,7 @@ Route::post('/send-otp', [LoginOtpController::class, 'login']);
 Route::post('/verify', [LoginOtpController::class, 'verify']);
 
 Route::post('/resend-otp', [ResendOtpController::class, 'resend']);
+Route::post('/verifyOtp', [ResendOtpController::class, 'verifyOtp']);
 
 // Route::post('/verifyOtp', function (Request $request) {
 //     if ($request->otp == Session::get('otp')) {
@@ -61,3 +64,23 @@ Route::post('/resend-otp', [ResendOtpController::class, 'resend']);
 //     }
 //     return response()->json(['message' => 'Invalid OTP'], 400);
 // });
+
+
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users/{id}/assign-role', [UserController::class, 'assignRole']);
+});
+
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users/{id}/assign-role', [UserController::class, 'assignRole']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/roles', [RoleController::class, 'index']);
+    Route::post('/roles', [RoleController::class, 'store']);
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+    Route::post('/roles/{id}/assign-permissions', [RoleController::class, 'assignPermission']);
+});

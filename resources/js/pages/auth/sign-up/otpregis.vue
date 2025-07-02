@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
-import GuestLayout from "../components/GuestLayout.vue";
-import axiosClient from "../axios";
-import router from "../router";
+import GuestLayout from "../../../components/GuestLayout.vue";
+import axiosClient from "../../../axios";
+import router from "../../../router";
 import Swal from "sweetalert2"; // Import SweetAlert2
 
 
@@ -13,25 +13,27 @@ const email = localStorage.getItem('email');
 const verifyOtp = async () => {
     try {
         const response = await axiosClient.post("/verify-otp", {
-            email: email,
-            otp: otp.value
+            email: localStorage.getItem('email'),
+            otp: kodeOtp.value
         });
 
-        // localStorage.removeItem('email');
         if (response.status === 200) {
             Swal.fire({
                 icon: 'success',
-                title: 'Registasi Berhasil!'
-                // timer: 2000, // Auto-close dalam 2 detik
-                // showConfirmButton: false
+                title: 'Registrasi Berhasil!',
+                text: response.data.message || 'Akun Anda telah berhasil diverifikasi.'
             });
 
-            // Redirect ke dashboard atau halaman utama setelah registrasi sukses
+            // Hapus email dari localStorage kalau perlu
+            localStorage.removeItem('email');
+
+            // Redirect ke dashboard atau halaman utama setelah sukses
             router.push("/");
         }
+
         message.value = response.data.message;
-    }  catch (error) {
-        console.error("OTP Verification Error:", error); // Debugging error di console
+    } catch (error) {
+        console.error("OTP Verification Error:", error); // Debug log
 
         let errorMessage = "Terjadi kesalahan saat verifikasi OTP.";
 
@@ -53,6 +55,7 @@ const verifyOtp = async () => {
     }
 };
 
+
 // return {
 //   email,
 //   otp,
@@ -64,6 +67,7 @@ const verifyOtp = async () => {
 
 <!-- // Vue Frontend (components/OtpVerification.vue) -->
 <template>
+
     <div class="w-99.5 h-40 rounded-md" id="box">
         <form @submit.prevent="verifyOtp">
             <!-- <div>

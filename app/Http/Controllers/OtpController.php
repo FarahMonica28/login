@@ -35,7 +35,7 @@ class OtpController extends Controller {
 
 //     // Periksa apakah OTP valid
 //     // if (!$otpStored) {
-//     //     return response()->json(['message' => 'OTP expired or not found'], 400);
+//     //     return responshhe()->json(['message' => 'OTP expired or not found'], 400);
 //     // }
 //     if ($request->otp != Cache::get('otp_' . $request->email)) {
 //         return response()->json(['message' => 'OTP tidak valid'], 400);
